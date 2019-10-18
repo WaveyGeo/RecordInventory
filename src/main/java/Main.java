@@ -20,34 +20,18 @@ public class Main {
     private static void closeDatabase(){
         try {
             db.close();
-            System.out.println("******Disconnected from database******");
+            System.out.println("****** DISCONNECTED FROM DATABASE ******");
         } catch (Exception exception) {
-            System.out.println("******Database disconnection error: " + exception.getMessage() + "******");
+            System.out.println("****** DATABASE DISCONNECTION ERROR: " + exception.getMessage() + " ******");
         }
     }
-    private static void listAll() {
-        // code to get data from, write to the database etc goes here!
-        try {
-            PreparedStatement ps = db.prepareStatement("select UserID, UserName, UserPassword from Users");
 
-            ResultSet results = ps.executeQuery();
-            while (results.next()) {
-                int userID = results.getInt(1);
-                String userName = results.getString(2);
-                String userPassword = results.getString(3);
-                System.out.println("The user is " + userName + ", Password: " + userPassword + " (user ID: " + userID + ")");
-            }
-        } catch (Exception exception) {
-            System.out.println("Error In Database." + exception.getMessage());
-        }
-
-    }
 
     public static void main(String[] args) {
 
         openDatabase("RecordDatabase.db");
-        User.insertUser(1,"TestyBrair","PAs3");
-        listAll();
+        Records.insertRecord(1,"The Stone Roses","5/5/89",1,1,1,1);
+        User.listAllUsers();
         closeDatabase();
 
 
