@@ -30,7 +30,7 @@ public class Main {
     public static void main(String[] args) {
 
         openDatabase("RecordDatabase.db");
-        Records.insertRecord(1,"The Stone Roses","5/5/89",1,1,1,1);
+        Records.insertRecord(2,"The Stone Roses","5/5/89",1,1,1,1);
         User.listAllUsers();
         closeDatabase();
 
