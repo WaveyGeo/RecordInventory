@@ -5,43 +5,64 @@ import java.sql.ResultSet;
 import java.sql.SQLOutput;
 
 import Server.Main;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 @Path("user/")
 public class User {
 
+    @POST
+    @Path("new")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String insertUser(@FormDataParam("id") Integer id, @FormDataParam("userName") String userName, @FormDataParam("userPassword") String userPassword) {
 
-    public static void insertUser(int UserID, String UserName, String UserPassword){
-        if (UserName.length() < 13 && UserName.length() > 0 && UserPassword.length() > 4) {
+        if (userName.length() < 13 && userName.length() > 0 && userPassword.length() > 4) {
             try {
+                if (id == null || userName == null || userPassword == null) {
+                    throw new Exception("One or more form data parameters are missing in the HTTP request.");
+                }
+                System.out.println("user/new id=" + id);
+
                 PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Users(UserID, UserName, UserPassword) VALUES (?,?,?)");
-                ps.setInt(1, UserID);
-                ps.setString(2, UserName);
-                ps.setString(3, UserPassword);
-                ps.executeUpdate();
+                ps.setInt(1, id);
+                ps.setString(2, userName);
+                ps.setString(3, userPassword);
+                ps.execute();
+                return "{\"status\": \"OK\"}";
             } catch (Exception exception) {
                 System.out.println("****** DATABASE ERROR: " + exception.getMessage() + " ******");
+                return "{\"error\": \"Unable to create new user, please see the server console for more information.\"}";
             }
         }
         else {
             System.out.println("Please enter a valid username and a password longer than 4 letters");
+            return "{\"error\": \"Please enter a valid username and a password longer than 4 letters\"}";
         }
     }
 
-    public static void deleteUser(String UserName, String UserPassword) {
+    @POST
+    @Path("delete")
+    @Consumes(MediaType.APPLICATION_JSON)
+
+    public String deleteUser(@FormDataParam("id") Integer id) {
         try {
-            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM Users WHERE UserName = ? AND UserPassword = ?");
-            ps.setString(1, UserName);
-            ps.setString(2, UserPassword);
-            ps.executeUpdate();
-            } catch (Exception exception) {
-            System.out.println("****** DATABASE ERROR: " + exception.getMessage() + " ******");
+            if (id == null) {
+                throw new Exception("One or more form data parameters are missing in the HTTP request.");
+            }
+            System.out.println("thing/delete id=" + id);
+            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM Users WHERE userID = ?");
+            ps.setInt(1, id);
+            ps.execute();
+            return "{\"Status\": \"OK\"}";
+
+        } catch (Exception exception) {
+            System.out.println("****** DATABASE ERROR: " + exception.getMessage());
+            return "{\"error\": \"Unable to delete item, please see the server console for more information.\"}";
         }
 
     }

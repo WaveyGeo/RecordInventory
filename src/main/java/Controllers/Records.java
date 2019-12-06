@@ -29,6 +29,22 @@ public class Records {
         }
     }
 
+    public static void updateRecord(int RecordID, String RecordName, String RecordRelease, String RecordSleeve, int ArtistID, int GenreID) {
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE Records SET RecordName = ?, RecordRelease = ?, RecordSleeve = ?, GenreID = ?, ArtistID = ? WHERE RecordID = ?");
+            ps.setString(1, RecordName);
+            ps.setString(2, RecordRelease);
+            ps.setString(3, RecordSleeve);
+            ps.setInt(4, GenreID);
+            ps.setInt(5, ArtistID);
+            ps.setInt(6, RecordID);
+
+            ps.execute();
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+        }
+    }
+
     public static void listAllRecords() {
         // code to get data from, write to the database etc goes here!
         try {
