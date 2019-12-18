@@ -36,7 +36,7 @@ public class Main {
 
 
     public static void main(String[] args) {
-        openDatabase("RecordDatabase.db");
+        openDatabase("RecordDatabase2.db");
 
         ResourceConfig config = new ResourceConfig();
         config.packages("Controllers");

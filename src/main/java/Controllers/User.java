@@ -20,28 +20,26 @@ public class User {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public String insertUser(@FormDataParam("id") Integer id, @FormDataParam("userName") String userName, @FormDataParam("userPassword") String userPassword) {
-
-        if (userName.length() < 13 && userName.length() > 0 && userPassword.length() > 4) {
-            try {
-                if (id == null || userName == null || userPassword == null) {
-                    throw new Exception("One or more form data parameters are missing in the HTTP request.");
-                }
-                System.out.println("user/new id=" + id);
-
-                PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Users(UserID, UserName, UserPassword) VALUES (?,?,?)");
-                ps.setInt(1, id);
-                ps.setString(2, userName);
-                ps.setString(3, userPassword);
-                ps.execute();
-                return "{\"status\": \"OK\"}";
-            } catch (Exception exception) {
-                System.out.println("****** DATABASE ERROR: " + exception.getMessage() + " ******");
-                return "{\"error\": \"Unable to create new user, please see the server console for more information.\"}";
+        try {
+            if (id == null || userName == null || userPassword == null) {
+                throw new Exception("One or more form data parameters are missing in the HTTP request.");
             }
-        }
-        else {
-            System.out.println("Please enter a valid username and a password longer than 4 letters");
-            return "{\"error\": \"Please enter a valid username and a password longer than 4 letters\"}";
+            System.out.println("user/new id=" + id);
+
+            if (!(userName.length() < 13 && userName.length() > 0 && userPassword.length() > 4)) {
+                System.out.println("Please enter a valid username and a password longer than 4 letters");
+                return "{\"error\": \"Please enter a valid username and a password longer than 4 letters\"}";
+            }
+
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Users(UserID, UserName, UserPassword) VALUES (?,?,?)");
+            ps.setInt(1, id);
+            ps.setString(2, userName);
+            ps.setString(3, userPassword);
+            ps.execute();
+            return "{\"status\": \"OK\"}";
+        } catch (Exception exception) {
+            System.out.println("****** DATABASE ERROR: " + exception.getMessage() + " ******");
+            return "{\"error\": \"Unable to create new user, please see the server console for more information.\"}";
         }
     }
 
