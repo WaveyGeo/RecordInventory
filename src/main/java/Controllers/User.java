@@ -53,7 +53,7 @@ public class User {
                 throw new Exception("One or more form data parameters are missing in the HTTP request.");
             }
             System.out.println("thing/delete id=" + id);
-            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM Users WHERE userID = ?");
+            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM Users WHERE UserID = ?");
             ps.setInt(1, id);
             ps.execute();
             return "{\"Status\": \"OK\"}";
@@ -85,6 +85,33 @@ public class User {
         } catch (Exception exception) {
             System.out.println("Error In Database." + exception.getMessage());
             return"{\"error\": \"Unable to list users, please see server console for more info.\"}";
+        }
+    }
+
+    @POST
+    @Path("update")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String updateUser(@FormDataParam("id") Integer id,
+                             @FormDataParam("name") String UserName,
+                             @FormDataParam("password") String UserPassword) {
+
+        System.out.println("Got here!");
+
+        try {
+            if (id == null || UserName == null || UserPassword == null) {
+                throw new Exception("One or more form data parameters are missing in the HTTP Request.");
+            }
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE Users SET UserPassword = ? AND UserName = ?  WHERE UserID = ?");
+            ps.setString(1, UserPassword);
+            ps.setString(2, UserName);
+            ps.setInt(3, id);
+            ps.execute();
+            return "{\"status\": \"OK\"}";
+
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"error\": \"Unable to update item, please see server console for more information.\"}";
         }
     }
 }
