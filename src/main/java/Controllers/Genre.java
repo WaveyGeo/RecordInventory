@@ -72,7 +72,7 @@ public class Genre {
     @Path("delete")
     @Consumes(MediaType.APPLICATION_JSON)
 
-    public String deleteUser(@FormDataParam("GenreID") Integer GenreID) {
+    public String deleteGenre(@FormDataParam("GenreID") Integer GenreID) {
         try {
             if (GenreID == null) {
                 throw new Exception("One or more form data parameters are missing in the HTTP request.");
@@ -88,6 +88,31 @@ public class Genre {
             return "{\"error\": \"Unable to delete item, please see the server console for more information.\"}";
         }
 
+    }
+
+    @POST
+    @Path("update")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String updateGenre(@FormDataParam("id") Integer id,
+                              @FormDataParam("genreName") String genreName) {
+
+        System.out.println("Got here!");
+
+        try {
+            if (id == null || genreName == null) {
+                throw new Exception("One or more form data parameters are missing in the HTTP Request.");
+            }
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE Genres SET GenreName = ? WHERE GenreID = ?");
+            ps.setInt(1, id);
+            ps.setString(2, genreName);
+            ps.execute();
+            return "{\"status\": \"OK\"}";
+
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"error\": \"Unable to update item, please see server console for more information.\"}";
+        }
     }
 }
 

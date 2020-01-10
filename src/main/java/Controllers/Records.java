@@ -45,22 +45,22 @@ public class Records {
                 return "{\"error\"{\"Unable to create new item, please see server console for more information.\"}";
             }
 
-            System.out.println("record/new id=" + RecordID);
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Records(RecordID, RecordName, RecordRelease, ArtistID, GenreID, UserID, SongID ) VALUES (?,?,?,?,?,?,?)");
-            ps.setInt(1, RecordID);
-            ps.setString(2, RecordName);
-            ps.setString(3, RecordRelease);
-            ps.setInt(4, ArtistID);
-            ps.setInt(5, GenreID);
-            ps.setInt(6, UserID);
-            ps.setInt(7, SongID);
-            ps.execute();
-            return "{\"status\": \"OK\"}";
+        System.out.println("record/new id=" + RecordID);
+        PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Records(RecordID, RecordName, RecordRelease, ArtistID, GenreID, UserID, SongID ) VALUES (?,?,?,?,?,?,?)");
+        ps.setInt(1, RecordID);
+        ps.setString(2, RecordName);
+        ps.setString(3, RecordRelease);
+        ps.setInt(4, ArtistID);
+        ps.setInt(5, GenreID);
+        ps.setInt(6, UserID);
+        ps.setInt(7, SongID);
+        ps.execute();
+        return "{\"status\": \"OK\"}";
 
-        } catch (Exception exception) {
-            System.out.println("****** DATABASE ERROR: " + exception.getMessage() + " ******");
-            return "{\"error\"{\"Unable to create new item, please see server console for more information.\"}";
-        }
+    } catch (Exception exception) {
+        System.out.println("****** DATABASE ERROR: " + exception.getMessage() + " ******");
+        return "{\"error\"{\"Unable to create new item, please see server console for more information.\"}";
+    }
 
 
     }
@@ -130,5 +130,28 @@ public class Records {
             return "{\"error\": \"Unable to list records, please see the server console for more information.\"}";
         }
 
+    }
+
+    @POST
+    @Path("delete")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String deleteRecord(@FormDataParam("id") Integer RecordID) {
+
+        try {
+            if (RecordID == null) {
+                throw new Exception("One or more form data parameters are missing in the request.");
+            }
+            System.out.println("record/delete id=" + RecordID);
+
+
+            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM Records WHERE ID = ?");
+            ps.setInt(1,RecordID);
+            ps.execute();
+            return "{\"status\": \"OK\"}";
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"error\": \"Unable to delete item, please see the server console for more information.\"}";
+        }
     }
 }
