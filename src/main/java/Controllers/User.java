@@ -19,7 +19,9 @@ public class User {
     @Path("new")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String insertUser(@FormDataParam("id") Integer id, @FormDataParam("userName") String userName, @FormDataParam("userPassword") String userPassword) {
+    public String insertUser(@FormDataParam("id") Integer id,
+                             @FormDataParam("userName") String userName,
+                             @FormDataParam("userPassword") String userPassword) {
         try {
             if (id == null || userName == null || userPassword == null) {
                 throw new Exception("One or more form data parameters are missing in the HTTP request.");

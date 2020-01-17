@@ -110,7 +110,7 @@ public class Records {
         System.out.println("records/list");
         JSONArray list = new JSONArray();
         try {
-            PreparedStatement ps = Main.db.prepareStatement("select RecordID, RecordName, RecordRelease, RecordSleeve, UserID, SongID, GenreID, ArtistID from Records");
+            PreparedStatement ps = Main.db.prepareStatement("select RecordID, RecordName, RecordRelease, RecordSleeve, GenreID, ArtistID from Records");
             ResultSet results = ps.executeQuery();
             while (results.next()) {
                 JSONObject item = new JSONObject();
@@ -118,10 +118,8 @@ public class Records {
                 item.put("name", results.getString(2));
                 item.put("release", results.getString(3));
                 item.put("sleeve", results.getString(4));
-                item.put("User", results.getInt(5));
-                item.put("Song", results.getInt(6));
-                item.put("Genre", results.getInt(7));
-                item.put("Artist", results.getString(8));
+                item.put("Genre", results.getInt(5));
+                item.put("Artist", results.getString(6));
                 list.add(item);
             }
             return list.toString();
