@@ -49,14 +49,14 @@ public class User {
     @Path("delete")
     @Consumes(MediaType.APPLICATION_JSON)
 
-    public String deleteUser(@FormDataParam("id") Integer id) {
+    public String deleteUser(@FormDataParam("id") Integer UserID) {
         try {
-            if (id == null) {
+            if (UserID == null) {
                 throw new Exception("One or more form data parameters are missing in the HTTP request.");
             }
-            System.out.println("thing/delete id=" + id);
+            System.out.println("thing/delete id=" + UserID);
             PreparedStatement ps = Main.db.prepareStatement("DELETE FROM Users WHERE UserID = ?");
-            ps.setInt(1, id);
+            ps.setInt(1, UserID);
             ps.execute();
             return "{\"Status\": \"OK\"}";
 
